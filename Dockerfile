@@ -38,11 +38,13 @@ ENV APACHE_DOCUMENT_ROOT /var/www/html/public
 RUN sed -ri -s 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
 RUN sed -ri -s 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
-# Enable Apache Mod Rewrite
-RUN a2enmod rewrite
+# Enable Apache Mod Rewrite dan atur MPM prefork untuk mencegah error bentrok MPM
+RUN a2enmod rewrite \
+    && a2dismod mpm_event \
+    && a2enmod mpm_prefork
 
 # Expose port 80
 EXPOSE 80
 
-# Start Apache server safely (menggunakan apache2-foreground langsung agar tidak error saat start)
+# Start Apache server safely
 CMD ["apache2-foreground"]
