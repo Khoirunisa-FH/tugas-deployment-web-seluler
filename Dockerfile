@@ -44,5 +44,5 @@ RUN a2enmod rewrite
 # Expose port 80
 EXPOSE 80
 
-# Start Apache server
-CMD php artisan config:cache && apache2-foreground
+# Start Apache server safely (menggunakan apache2-foreground langsung agar tidak error saat start)
+CMD ["apache2-foreground"]
