@@ -23,8 +23,11 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Set working directory
 WORKDIR /var/www/html
 
-# Copy existing application directory contents
+# Copy project files first
 COPY . /var/www/html
+
+# Run composer install to generate the vendor folder
+RUN composer install --no-dev --optimize-autoloader --no-interaction
 
 # Copy existing application directory permissions
 RUN chown -R www-data:data /var/www/html/storage /var/www/html/bootstrap/cache || true
@@ -38,7 +41,7 @@ RUN sed -ri -s 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf
 # Enable Apache Mod Rewrite
 RUN a2enmod rewrite
 
-# Expose port 80 (Render will route traffic to this port)
+# Expose port 80
 EXPOSE 80
 
 # Start Apache server
