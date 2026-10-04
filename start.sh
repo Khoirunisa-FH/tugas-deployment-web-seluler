@@ -12,6 +12,7 @@ sed -i "s/<VirtualHost \*:[0-9]*>/<VirtualHost *:${PORT:-80}>/" /etc/apache2/sit
 
 # 3. Siapkan Laravel
 php artisan migrate --force || true
+php artisan db:seed --force || true
 php artisan config:cache || true
 
 # 4. Jalankan Apache
